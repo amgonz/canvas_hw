@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Canvas Game</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+</head>
+<body >
+    <div id="container">
+        <canvas id="canv" height="500px" width="800px"></canvas>
+    </div>
+
+    <script>
+    var canvas, ctx
+
+var mouseX, mouseY, mouseDown = 0,
+    lastX, lastY, color = '#000', size = 14;
+
+function draw(ctx,x,y) {
+    if (lastX && lastY && (x !== lastX || y !== lastY)) {
+        ctx.lineJoin = ctx.lineCap = 'round';
+        ctx.lineWidth = 5 * size;
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        
+    }
+
+  ctx.beginPath();
+  ctx.closePath();
+  ctx.fill();
+  lastX = x;
+  lastY = y;
+}
+
+
+function onMouseDown() {
+  mouseDown = 1
+  draw(ctx, mouseX, mouseY)
+}
+
+function onMouseUp() {
+  mouseDown = 0;
+  lastX = 0;
+  lastY = 0;
+}
+
+function onMouseMove(e) {
+  getMousePos(e)
+  if (mouseDown == 1) {
+      draw(ctx, mouseX, mouseY)
+  }
+}
+
+function getMousePos(e) {
+  if (!e)
+      var e = event
+  if (e.offsetX) {
+      mouseX = e.offsetX
+      mouseY = e.offsetY
+  }
+  else if (e.layerX) {
+      mouseX = e.layerX
+      mouseY = e.layerY
+  }
+ }
+
+function keyDown(e){
+    code = e.keyCode;
+    //colors
+    if(code == 82){
+        color = '#f00';
+    }else if(code == 66)
+    {
+        color = '#00c';
+    }else if(code == 71)
+    {
+        color = '#0c0';
+    }else if(code == 89)
+    {
+        color = '#ff0'
+    }
+    //arrows
+    else if(code == 38)
+    {
+        size += 2;
+    }else if(code == 40)
+    {
+        console.log(size);
+        if(size > 0){
+            size = size - 2;
+        }else{
+            size = 1;
+        }
+    }
+    //space bar
+    else if(code == 32)
+    {
+    ctx.clearRect(0, 0, 800, 500);
+    }
+       
+}
+
+
+function init() {
+    canvas = document.getElementById('canv')
+    ctx = canvas.getContext('2d')
+    canvas.addEventListener('mousedown', onMouseDown, false)
+    canvas.addEventListener('mousemove', onMouseMove, false)
+    window.addEventListener('mouseup', onMouseUp, false)
+    window.addEventListener('keydown',keyDown,false);
+
+}
+
+init();
+    
+    </script>
+</body>
+</html>
